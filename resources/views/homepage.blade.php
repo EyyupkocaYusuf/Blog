@@ -8,8 +8,9 @@
             <!-- Post preview-->
             @foreach($articles as $article)
             <div class="post-preview">
-                <a href="post.html">
+                <a href="{{route('single',[$article->GetCategoryName->slug,$article->slug])}}">
                     <h2 class="post-title">{{$article->title}}</h2>
+                    <img src="{{$article->image}}" />
                     <h3 class="post-subtitle">{{Str::limit($article->content,65)}}</h3>
                 </a>
                 <p class="post-meta">
