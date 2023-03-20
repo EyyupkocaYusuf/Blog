@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
 use App\Models\Article;
 use App\Models\Page;
+use App\Models\Contact;
 use function Sodium\increment;
 
 class HomepageController extends Controller
 {
-
     public function __construct()
     {
         view()->share('pages',Page::orderBy('order','ASC')->get());
@@ -51,4 +51,34 @@ class HomepageController extends Controller
         return view('page',$data);
     }
 
+    public function contact()
+    {
+        return view('contact');
+    }
+
+    public function contactpost(Request $request)
+    {
+        $rules = [
+            'name' => 'required|min:3',
+            'email' => 'required|email',
+            'phone' => 'required|numeric|digits:11',
+            'subject' => 'required',
+            'message' => 'required|min:10',
+        ];
+        $validate = Validator::make($request->post(),$rules);
+        if($validate->fails())
+        {
+            return redirect()->route('contact')->withErrors($validate)->withInput();
+        }
+
+        $contact = new Contact;
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->phone = $request->phone;
+        $contact->subject = $request->subject;
+        $contact->message = $request->message;
+        $contact->save();
+
+        return redirect()->route('contact')->with('success','Mesajınız alındı. En kısa sürede dönüş yapılacaktır. Teşekkür Ederiz.');
+    }
 }
