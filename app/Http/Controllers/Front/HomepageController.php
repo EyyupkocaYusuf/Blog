@@ -7,10 +7,16 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\Article;
+use App\Models\Page;
 use function Sodium\increment;
 
 class HomepageController extends Controller
 {
+
+    public function __construct()
+    {
+        view()->share('pages',Page::orderBy('order','ASC')->get());
+    }
     public function index()
     {
         $data['articles'] = Article::orderBy('created_at','DESC')->paginate(3);
@@ -36,6 +42,13 @@ class HomepageController extends Controller
         $data['categories'] = Category::orderBy('name','DESC')->get();
         $data['articles'] = Article::whereCategoryId($category->id)->orderBy('created_at','DESC')->paginate(1);
         return view('category',$data);
+    }
+
+    public function page($slug)
+    {
+        $page = Page::whereSlug($slug)->first() ?? abort(403,'Üzgünüm :(. Böyle bir Page bulunamadı.');
+        $data['page'] = $page;
+        return view('page',$data);
     }
 
 }

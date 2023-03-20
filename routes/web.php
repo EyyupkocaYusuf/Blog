@@ -17,4 +17,5 @@ Route::get('/',[\App\Http\Controllers\Front\HomepageController::class,'index'])-
 Route::get('/sayfa/',[\App\Http\Controllers\Front\HomepageController::class,'index']);
 Route::get('/kategori/{category}',[\App\Http\Controllers\Front\HomepageController::class,'category'])->name('category');
 Route::get('/{category}/{slug}',[\App\Http\Controllers\Front\HomepageController::class,'single'])->name('single');
+Route::get('/{slug}',[\App\Http\Controllers\Front\HomepageController::class,'page'])->name('page');
 

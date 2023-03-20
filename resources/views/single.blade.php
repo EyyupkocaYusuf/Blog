@@ -13,7 +13,7 @@
                                 {{$article->content}}
                                 <br>
                                 <br>
-                                <img src="{{$article->image}}" />
+                                <img width="720" height="480" src="{{$article->image}}" />
                                 <br>
                                 <br>
                                 <span class="float-end">{{$article->hit}} defa okundu</span>
