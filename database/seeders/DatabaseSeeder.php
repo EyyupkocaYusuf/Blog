@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ArticleSeeder::class,
             PageSeeder::class,
+            AdminSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

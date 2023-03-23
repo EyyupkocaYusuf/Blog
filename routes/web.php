@@ -10,9 +10,17 @@ use Illuminate\Support\Facades\Route;
 | Web Backend
 |--------------------------------------------------------------------------
 */
+Route::prefix('admin',)->name('admin.')->middleware('isLogin')->group(function () {
+    Route::get('/giris',[\App\Http\Controllers\backend\Authh::class,'login'])->name('login');
+    Route::post('/giris',[\App\Http\Controllers\backend\Authh::class,'loginPost'])->name('login.post');
+});
 
-Route::get('/admin/dashboard',[\App\Http\Controllers\backend\Dashboard::class,'index'])->name('admin.dashboard');
-Route::get('/admin/giris',[\App\Http\Controllers\backend\Auth::class,'login'])->name('admin.login');
+Route::prefix('admin',)->name('admin.')->middleware('isAdmin')->group(function () {
+    Route::get('/panel',[\App\Http\Controllers\backend\Dashboard::class,'index'])->name('dashboard');
+    Route::get('/cikis',[\App\Http\Controllers\backend\Authh::class,'logOut'])->name('logout');
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Front
