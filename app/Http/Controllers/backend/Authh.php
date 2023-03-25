@@ -17,6 +17,7 @@ class Authh extends Controller
     {
         if(Auth::attempt(['email'=>$request->email, 'password' => $request->password]))
         {
+            toastr()->success('Data has been saved successfully!', 'Congrats');
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('admin.login')->withErrors('Mail veya Şifre hatalı');
