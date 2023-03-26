@@ -1,5 +1,6 @@
 @foreach($articles as $article)
     <div class="post-preview">
+
         <a href="{{route('single',[$article->GetCategoryName->slug,$article->slug])}}">
             <h2 class="post-title">{{$article->title}}</h2>
             <img height="480" width="720" src="{{$article->image}}" />
@@ -12,6 +13,7 @@
 
             <span class="float-end">{{$article->GetCategoryName->name}}</span>
         </p>
+
     </div>
     <!-- Divider-->
     @if(!$loop->last)

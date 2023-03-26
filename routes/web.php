@@ -17,7 +17,17 @@ Route::prefix('admin',)->name('admin.')->middleware('isLogin')->group(function (
 
 Route::prefix('admin',)->name('admin.')->middleware('isAdmin')->group(function () {
     Route::get('panel',[\App\Http\Controllers\backend\Dashboard::class,'index'])->name('dashboard');
+    //Articles Routes
+    Route::get('/makaleler/silinenler',[App\Http\Controllers\backend\ArticleController::class,'trashed'])->name('trashed.article');
     Route::resource('/makaleler',App\Http\Controllers\backend\ArticleController::class);
+    Route::get('/switch',[App\Http\Controllers\backend\ArticleController::class,'switch'])->name('switch');
+    Route::get('/deletearticle/{id}',[App\Http\Controllers\backend\ArticleController::class,'delete'])->name('delete.article');
+    Route::get('/harddeletearticle/{id}',[App\Http\Controllers\backend\ArticleController::class,'hardDelete'])->name('hard.delete.article');
+    Route::get('/recoverarticle/{id}',[App\Http\Controllers\backend\ArticleController::class,'recover'])->name('recover.article');
+    //Categories Routes
+    Route::resource('/kategoriler',App\Http\Controllers\backend\categoryController::class);
+    Route::get('/deletecategory/{id}',[App\Http\Controllers\backend\categoryController::class,'delete'])->name('delete.category');
+    Route::get('/kategori/status',[\App\Http\Controllers\backend\categoryController::class,'switch'])->name('category.switch');
     Route::get('cikis',[\App\Http\Controllers\backend\Authh::class,'logOut'])->name('logout');
 });
 

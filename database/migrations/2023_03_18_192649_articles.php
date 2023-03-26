@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('hit')->default(0);
             $table->integer('status')->default(0);
             $table->string('slug');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
