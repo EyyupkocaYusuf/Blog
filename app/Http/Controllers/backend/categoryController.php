@@ -61,38 +61,28 @@ class categoryController extends Controller
          return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function repair(Request $request)
     {
-        //
+        $isSlug = Category::whereSlug(Str::slug($request->slug))->whereNotIn('id',[$request->id])->first();
+        $isName = Category::whereName(($request->category))->whereNotIn('id',[$request->id])->first();
+        if($isSlug or $isName)
+        {
+            toastr()->error($request->category.' kategorisi zaten mevcut.', 'Başarısız');
+            return redirect()->back();
+        }
+
+        $category=Category::find($request->id);
+        $category->name = $request->category ;
+        $category->slug = Str::slug($request->slug) ;
+        $category->save();
+        toastr()->success('Data has been saved successfully!', 'Başarılı');
+        return redirect()->back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function getData(Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        $category= Category::findOrFail($request->id);
+        return response()->json($category);
     }
 
     /**

@@ -27,7 +27,9 @@ Route::prefix('admin',)->name('admin.')->middleware('isAdmin')->group(function (
     //Categories Routes
     Route::resource('/kategoriler',App\Http\Controllers\backend\categoryController::class);
     Route::get('/deletecategory/{id}',[App\Http\Controllers\backend\categoryController::class,'delete'])->name('delete.category');
+    Route::post('/kategori/duzelt',[\App\Http\Controllers\backend\categoryController::class,'repair'])->name('category.repair');
     Route::get('/kategori/status',[\App\Http\Controllers\backend\categoryController::class,'switch'])->name('category.switch');
+    Route::get('/kategori/getData',[\App\Http\Controllers\backend\categoryController::class,'getData'])->name('category.getdata');
     Route::get('cikis',[\App\Http\Controllers\backend\Authh::class,'logOut'])->name('logout');
 });
 

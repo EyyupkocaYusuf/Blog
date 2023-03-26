@@ -3,6 +3,7 @@
 @section('content')
 
    <div class="row">
+       <!-- Modal -->
        <div class="col-md-4">
            <div class="card shadow mb-4">
                <div class="card-header py-3">
@@ -51,7 +52,7 @@
                                               @if($category->status == 1) checked @endif data-toggle="toggle">
                                    </td>
                                    <td>
-                                       <a href="{{route('admin.makaleler.edit',$category->id)}}" title="Düzenle" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
+                                       <a category-id="{{$category->id}}" title="Düzenle" class="btn btn-sm btn-primary edit-click"><i class="fa fa-pen"></i></a>
                                        <a href="{{route('admin.delete.category',$category->id)}}" title="Sil" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a>
                                    </td>
                                </tr>
@@ -63,6 +64,36 @@
            </div>
        </div>
    </div>
+   <div id="editModal" class="modal fade" role="dialog">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">&times;</button>
+                   <h4 class="modal-title">Kategoriyi Düzenle</h4>
+               </div>
+               <div class="modal-body">
+                   <form method="post" action="{{route('admin.category.repair')}}">
+                       @csrf
+                       <div class="form-group">
+                            <label>Kategori Adı</label>
+                           <input id="category" type="text" class="form-control" name="category">
+                           <input  type="hidden"  id="category_id" class="form-control" name="id">
+                       </div>
+                       <div class="form-group">
+                           <label>Kategori Slug</label>
+                           <input id="slug" type="text" class="form-control" name="slug">
+                       </div>
+               </div>
+
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
+                   <button type="submit" class="btn btn-success">Kaydet</button>
+               </div>
+               </form>
+           </div>
+
+       </div>
+   </div>
 @endsection
 @section('css')
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -71,6 +102,21 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script>
         $(function() {
+            $('.edit-click').click(function() {
+                id = $(this)[0].getAttribute('category-id');
+                $.ajax({
+                type:'GET',
+                url:'{{route('admin.category.getdata')}}',
+                data:{id:id},
+                success:function(data){
+                    console.log(data);
+                    $('#category').val(data.name);
+                    $('#slug').val(data.slug);
+                    $('#category_id').val(data.id);
+                    $('#editModal').modal();
+                }
+            });
+        });
             $('.switch').change(function() {
                 id = $(this)[0].getAttribute('category-id');
                 statu = $(this).prop('checked');
