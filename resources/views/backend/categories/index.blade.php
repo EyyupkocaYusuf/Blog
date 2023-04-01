@@ -53,13 +53,35 @@
                                    </td>
                                    <td>
                                        <a category-id="{{$category->id}}" title="Düzenle" class="btn btn-sm btn-primary edit-click"><i class="fa fa-pen"></i></a>
-                                       <a href="{{route('admin.delete.category',$category->id)}}" title="Sil" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a>
+                                       <a category-id="{{$category->id}}" category-count="{{$category->CategoryCount()}}" title="Sil" class="btn btn-sm btn-danger remove-click"><i class="fa fa-times"></i></a>
                                    </td>
                                </tr>
                            @endforeach
                            </tbody>
                        </table>
                    </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <div id="deleteModal" class="modal">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title">Kategoriyi Sil</h4>
+                   <button type="button" class="close" data-dismiss="modal">&times;</button>
+               </div>
+               <div class="modal-body" id="body">
+                   <div id="articleAlert" class="alert alert-danger">
+                   </div>
+               </div>
+               <div class="modal-footer">
+                   <form method="post" action="{{route('admin.category.delete')}}">
+                       @csrf
+                       <input type="hidden" name="id" id="deleteId">
+                       <button type="submit" id="deleteButton" class="btn btn-success">Sil</button>
+                   </form>
+                   <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
                </div>
            </div>
        </div>
@@ -83,15 +105,13 @@
                            <label>Kategori Slug</label>
                            <input id="slug" type="text" class="form-control" name="slug">
                        </div>
-               </div>
-
-               <div class="modal-footer">
+                </div>
+             <div class="modal-footer">
                    <button type="button" class="btn btn-danger" data-dismiss="modal">Kapat</button>
                    <button type="submit" class="btn btn-success">Kaydet</button>
                </div>
                </form>
            </div>
-
        </div>
    </div>
 @endsection
@@ -102,6 +122,29 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script>
         $(function() {
+            $('.remove-click').click(function() {
+                id = $(this)[0].getAttribute('category-id');
+                count = $(this)[0].getAttribute('category-count');
+                if(id==1)
+                {
+                    $('#articleAlert').html('Genel Kategorisi Silinemez. Silinen kategorilerdeki makaleler buraya taşınır.');
+                    $('#body').show();
+                    $('#deleteButton').hide();
+                    $('#deleteModal').modal();
+                    return;
+                }
+                $('#deleteButton').show();
+                $('#deleteId').val(id);
+                $('#articleAlert').html('');
+                $('#body').hide();
+                if(count>0)
+                {
+                    $('#articleAlert').html('Bu kategoriye air '+count+' makale bulunmaktadır. Silmek istediğinize emin misiniz?');
+                    $('#body').show();
+                }
+                $('#deleteModal').modal();
+
+            });
             $('.edit-click').click(function() {
                 id = $(this)[0].getAttribute('category-id');
                 $.ajax({

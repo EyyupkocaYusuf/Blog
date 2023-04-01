@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\Article;
 class categoryController extends Controller
 {
-
-
 
     public function switch(Request $request)
     {
@@ -53,7 +52,7 @@ class categoryController extends Controller
             return redirect()->back();
         }
 
-            $category=new Category;
+         $category=new Category;
          $category->name = $request->category ;
          $category->slug = Str::slug($request->category) ;
          $category->save();
@@ -85,16 +84,24 @@ class categoryController extends Controller
         return response()->json($category);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete($id)
+    public function delete(Request $request)
     {
-        Category::find($id)->delete();
-        toastr()->success('Data has been saved successfully!', 'Başarılı');
+       $category = Category::findOrFail($request->id);
+        if($category->id == 1)
+        {
+            toastr()->success('Data has been saved successfully!', 'Başarılı');
+            return redirect()->back();
+        }
+        $message='';
+        $count=$category->CategoryCount();
+        if($count>0)
+        {
+            Article::where('category_id',$category->id)->update(['category_id'=>1]);
+            $defaultCategory= Category::find(1);
+            $message='Bu kategoriye ait '.$count.' Makale '.$defaultCategory->name.' kategorisine taşındı.';
+        }
+        $category->delete();
+        toastr()->success('Data has been saved successfully!', $message);
         return redirect()->back();
     }
 }
